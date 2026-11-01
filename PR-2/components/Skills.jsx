@@ -1,3 +1,5 @@
+import React from "react";
+
 function Skills({ title, skills }) {
   return (
     <section className="card">

@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -11,7 +12,7 @@ import Contact from "./pages/Contact";
 import "./App.css";
 
 function App() {
-  const studentName = "Manav Kansagara";
+  const studentName = "Het Lukhi";
 
   return (
     <div className="container">

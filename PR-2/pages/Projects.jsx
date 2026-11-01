@@ -1,3 +1,5 @@
+import React from "react";
+
 function Projects() {
   const projects = [
     "Student Portfolio Website",

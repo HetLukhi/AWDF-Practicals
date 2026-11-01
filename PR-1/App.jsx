@@ -2,10 +2,11 @@ import Header from "./components/Header";
 import About from "./components/About";
 import Skills from "./components/Skills";
 import Footer from "./components/Footer";
+import React from "react";
 import "./App.css";
 
 function App() {
-  const studentName = "Manav Kansagara";
+  const studentName = "Het Lukhi";
 
   const skills = [
     "HTML",

@@ -1,9 +1,10 @@
+import React from "react";
 import { useState, useEffect } from 'react';
 import Loading from '../component/Loading';
 import Error from '../component/Error';
 
 // GitHub username for fetching live repositories
-const GITHUB_USERNAME = 'KansagaraManav2006';
+const GITHUB_USERNAME = 'HetLukhi';
 
 function Projects() {
   const [repos, setRepos] = useState([]);

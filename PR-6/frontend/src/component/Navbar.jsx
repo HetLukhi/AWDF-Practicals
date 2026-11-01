@@ -4,7 +4,7 @@ function Navbar({ isDarkMode, toggleTheme }) {
   return (
     <nav className="navbar">
       <NavLink to="/" className="logo">
-        Manav Portfolio
+        Het Portfolio
       </NavLink>
 
       <div className="nav-links">

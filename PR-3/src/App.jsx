@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./component/Navbar";
@@ -27,15 +28,15 @@ function App() {
   };
 
   const student = {
-    name: "Manav Kansagara",
+    name: "Het Lukhi",
     title: "Computer Science Engineering ",
     college: "CHARUSAT ",
-    semester: "Semester 7",
+    semester: "Semester 5",
     city: "Nadiad, Gujarat",
-    email: "manav@gmail.com",
+    email: "24it043@charusat.edu.in",
     phone: "+91 ----------",
-    github: "github.com/KansagaraManav2006",
-    linkedin: "linkedin.com/in/manav",
+    github: "github.com/HetLukhi",
+    linkedin: "linkedin.com/in/HetLukhi",
     objective:
       "Passionate Computer Engineering student with strong interest in Web Development, Artificial Intelligence, Machine Learning, and Full Stack Development. Seeking opportunities to build real-world software solutions."
   };

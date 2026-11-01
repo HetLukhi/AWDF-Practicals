@@ -27,15 +27,15 @@ function App() {
   };
 
   const student = {
-    name: 'Manav Kansagara',
+    name: 'Het Lukhi',
     title: 'Computer Science Engineering Student',
     college: 'CHARUSAT University',
     semester: 'Semester 5',
     city: 'Nadiad, Gujarat',
-    email: 'manav@gmail.com',
+    email: '24it043@charusat.edu.in',
     phone: '+91 ----------',
-    github: 'github.com/KansagaraManav2006',
-    linkedin: 'linkedin.com/in/manav',
+    github: 'github.com/HetLukhi',
+    linkedin: 'linkedin.com/in/HetLukhi',
     objective:
       'Passionate Computer Engineering student with strong interest in Web Development, Full Stack Development, React, Node.js, and MongoDB. Seeking opportunities to build real-world software solutions.'
   };

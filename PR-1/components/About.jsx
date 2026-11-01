@@ -1,3 +1,5 @@
+import React from "react";
+
 function About() {
   return (
     <section className="card">
@@ -15,7 +17,7 @@ function About() {
         <tbody>
           <tr>
             <td><strong>College:</strong></td>
-            <td>DEPSTAR College</td>
+            <td>CSPIT College</td>
           </tr>
 
           <tr>
@@ -30,7 +32,7 @@ function About() {
 
           <tr>
             <td><strong>Email:</strong></td>
-            <td>manav@gmail.com</td>
+            <td>24it043@charust.edu.in</td>
           </tr>
         </tbody>
       </table>

@@ -1,3 +1,4 @@
+import React from "react";
 import Header from '../component/Header'
 import About from '../component/About'
 import Skills from '../component/Skills'
