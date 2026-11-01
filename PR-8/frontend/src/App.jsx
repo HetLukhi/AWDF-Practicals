@@ -1,0 +1,78 @@
+import { useState, useEffect, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './component/Navbar';
+import Footer from './component/Footer';
+import RouteFallback from './component/RouteFallback';
+import { lazyWithDelay } from './utils/lazyWithDelay';
+import './App.css';
+
+// Route-based code splitting with React.lazy() and 300ms minimum delay fallback (Supplementary Problem 2)
+const Home = lazyWithDelay(() => import('./pages/home'), 300);
+const Projects = lazyWithDelay(() => import('./pages/projects'), 300);
+const Contact = lazyWithDelay(() => import('./pages/contact'), 300);
+
+function App() {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('theme') === 'dark';
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
+  const student = {
+    name: 'Het Lukhi',
+    title: 'Computer Science Engineering Student',
+    college: 'CHARUSAT University',
+    semester: 'Semester 5',
+    city: 'Nadiad, Gujarat',
+    email: '24it043@charusat.edu.in',
+    phone: '+91 ----------',
+    github: 'github.com/HetLukhi',
+    linkedin: 'linkedin.com/in/HetLukhi',
+    objective:
+      'Passionate Computer Engineering student with strong interest in Web Development, Full Stack Development, React, Node.js, and MongoDB. Seeking opportunities to build real-world software solutions.'
+  };
+
+  const skills = [
+    'HTML5',
+    'CSS3',
+    'JavaScript',
+    'React JS',
+    'Node.js',
+    'Express.js',
+    'MongoDB',
+    'Mongoose',
+    'REST APIs',
+    'Git',
+    'GitHub'
+  ];
+
+  return (
+    <div className="container">
+      <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+      <main className="content">
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/" element={<Home student={student} skills={skills} />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </Suspense>
+      </main>
+      <Footer student={student} />
+    </div>
+  );
+}
+
+export default App;
