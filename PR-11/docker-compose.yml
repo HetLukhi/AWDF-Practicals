@@ -1,0 +1,68 @@
+version: '3.8'
+
+# =========================================================================
+# Practical 11: Multi-Container Orchestration with Docker Compose
+# Services: Frontend (React/Vite), Backend (Node/Express), Database (MongoDB)
+# =========================================================================
+
+services:
+  # Database Service: Official MongoDB Container
+  mongodb:
+    image: mongo:latest
+    container_name: prac11-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  # Backend Service: Node.js / Express REST API with EventEmitter & Caching
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: prac11-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/tasksDB_prac11
+      - NODE_ENV=production
+      - JWT_SECRET=supersecretjwtkey_prac11_docker_2026
+      - CACHE_TTL=60
+      - ENABLE_CACHE=true
+      - NOTIFICATION_DELAY_MS=2000
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # Frontend Service: React 18 + Vite Production Preview
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: prac11-frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+# Named volume ensuring persistent storage across container recreation
+volumes:
+  mongo-data:
+    name: prac11_mongo_data
+
+# Isolated bridge network for internal inter-container DNS communication
+networks:
+  app-network:
+    name: prac11_app_network
+    driver: bridge
