@@ -1,0 +1,229 @@
+{
+  "info": {
+    "_postman_id": "prac10-events-collection-2026",
+    "name": "Practical 10: Event-Driven Architecture (Node.js EventEmitter)",
+    "description": "Postman Collection for Practical 10: Asynchronous Processing with Event-Driven Architecture in Node.js/Express/MongoDB",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. System Health & Event Metadata",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        },
+        "description": "Public status check verifying event listeners, caching configuration, and simulated delay"
+      }
+    },
+    {
+      "name": "02. Authentication - Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"developer@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "register"]
+        }
+      }
+    },
+    {
+      "name": "03. Authentication - Login User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token) {",
+              "    pm.collectionVariables.set('token', jsonData.token);",
+              "    console.log('JWT Token stored successfully');",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"developer@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "04. Create Task (Asynchronous - Default)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.data && jsonData.data._id) {",
+              "    pm.collectionVariables.set('taskId', jsonData.data._id);",
+              "    console.log('Created Task ID saved:', jsonData.data._id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Implement Real-Time Event Notification Architecture\",\n  \"description\": \"Configure EventEmitter, non-blocking notification listeners, and audit logging.\",\n  \"priority\": \"high\",\n  \"assignedUser\": \"alice.engineer@techcorp.io\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks"]
+        },
+        "description": "Emits 'task-created' event. Main API returns HTTP 201 immediately (~10ms) while listener processes in the background."
+      }
+    },
+    {
+      "name": "05. Create Task (Synchronous Comparison - Blocking)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Generate Monthly Financial Audit Report\",\n  \"description\": \"This request demonstrates synchronous blocking behavior.\",\n  \"priority\": \"medium\",\n  \"assignedUser\": \"finance@techcorp.io\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks?mode=sync",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks"],
+          "query": [
+            { "key": "mode", "value": "sync" }
+          ]
+        },
+        "description": "Passes ?mode=sync. Demonstrates that placing notification logic directly inside route blocks response for ~2000ms."
+      }
+    },
+    {
+      "name": "06. Get All Tasks (Cached)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks"]
+        }
+      }
+    },
+    {
+      "name": "07. Get Task By ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/tasks/{{taskId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks", "{{taskId}}"]
+        }
+      }
+    },
+    {
+      "name": "08. Delete Task (Emits task-deleted Event)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/tasks/{{taskId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks", "{{taskId}}"]
+        },
+        "description": "Supplementary Problem 1: Deletes task from DB and asynchronously emits 'task-deleted' event."
+      }
+    },
+    {
+      "name": "09. Trigger Simulated Error (Tests error Listener)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Simulated SMTP Gateway Socket Timeout (Connection Refused)\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks/test-error",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks", "test-error"]
+        },
+        "description": "Supplementary Problem 2: Emits 'error' event to verify that error listener handles the exception safely without crashing."
+      }
+    },
+    {
+      "name": "10. View Event Execution History",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/tasks/events/history",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks", "events", "history"]
+        },
+        "description": "Returns list of all events processed by listeners, complete with start and completion timestamps."
+      }
+    }
+  ]
+}
